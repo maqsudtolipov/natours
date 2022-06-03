@@ -1,16 +1,31 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 //-- Expess is a functoin that upon calling add methods to app variable
 const app = express();
-
 app.use(express.json());
+
+// 1 MIDDLEWARES
+app.use(morgan('dev'));
+app.use((req, res, next) => {
+  console.log('🐛 Middware is called');
+  next();
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
 
+// 2 ROUTE HANDLER
+
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   res.status(200).json({
     status: 'success',
     results: tours.length,
@@ -93,8 +108,55 @@ const deleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined yet!',
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined yet!',
+  });
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined yet!',
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined yet!',
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    status: 'error',
+    message: 'This route is not defined yet!',
+  });
+};
+
+// 3 ROUTES
+
 app.route('/api/v1/tours').get(getAllTours).post(createTour);
 app.route('/api/v1/tour/:id').get(getTour).patch(updateTour).delete(deleteTour);
+
+app.route('/api/v1/users').get(getAllUsers).post(createUser);
+
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
+
+// 4 SERVER
 
 const port = 3000;
 app.listen(port, () => {
