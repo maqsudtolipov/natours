@@ -5,11 +5,15 @@ const userRouter = require('./routes/userRoutes');
 
 //-- Expess is a functoin that upon calling add methods to app variable
 const app = express();
+
+// 1 MIDDLEWARES
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
+
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 
-// 1 MIDDLEWARES
-app.use(morgan('dev'));
 app.use((req, res, next) => {
   console.log('🐛 Middware is called');
   next();
