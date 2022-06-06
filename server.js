@@ -16,7 +16,7 @@ mongoose
     useCreateIndex: true,
     useFindAndModify: false,
   })
-  .then(() => console.log('🥗💥 DB connection successful'));
+  .then(() => console.log('🥗 DB connection successful'));
 
 const tourSchema = new mongoose.Schema({
   name: {
@@ -26,7 +26,7 @@ const tourSchema = new mongoose.Schema({
   },
   rating: {
     type: Number,
-    required: [true, 'A tour must have a rating'],
+    default: 4.5,
   },
   price: {
     type: Number,
@@ -34,6 +34,21 @@ const tourSchema = new mongoose.Schema({
   },
 });
 const Tour = mongoose.model('Tour', tourSchema);
+
+const testTour = new Tour({
+  name: 'The Parl Camper',
+  rating: 5,
+  price: 100,
+});
+
+testTour
+  .save()
+  .then((doc) => {
+    console.log(doc);
+  })
+  .catch((err) => {
+    console.log('ERROR 💥:', err);
+  });
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
